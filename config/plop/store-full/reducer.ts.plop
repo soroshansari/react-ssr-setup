@@ -1,0 +1,96 @@
+import { produce } from 'immer';
+import { ErrorMessage } from '../../providers/global.provider';
+import { {{pascalCase storeName}}Actions, {{pascalCase storeName}}ActionTypes, {{pascalCase storeName}}State, {{camelCase storeName}}InitialState } from './types';
+
+export default (state: {{pascalCase storeName}}State = {{camelCase storeName}}InitialState, action: {{pascalCase storeName}}Actions) =>
+    produce(state, (draft) => {
+        switch (action.type) {
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_LIST_REQUEST:
+                if (state.updatedAt) {
+                    draft.isLoadingMore = true;
+                } else {
+                    draft.isLoading = true;
+                }
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_LIST_SUCCESS:
+                draft.items = [...state.items, ...action.payload.items];
+                draft.isLoading = false;
+                draft.isLoadingMore = false;
+                draft.lastOneFetched = action.payload.items.length < state.fetchLimit;
+                draft.updatedAt = action.payload.updatedAt;
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_LIST_FAILURE:
+                draft.isLoading = false;
+                draft.errors = ErrorMessage(action.payload.reason);
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_ADD_REQUEST:
+                draft.isLoading = true;
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_ADD_SUCCESS:
+                if (state.updatedAt) {
+                    draft.items = [action.payload, ...state.items];
+                }
+                state.isLoading = false;
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_ADD_FAILURE:
+                draft.isLoading = false;
+                draft.errors = ErrorMessage(action.payload.reason);
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_UPDATE_REQUEST:
+                draft.items = state.items.map((item) => {
+                    if (item.id === action.payload.id) {
+                        item.isUpdating = true;
+                    }
+                    return item;
+                });
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_UPDATE_SUCCESS:
+                draft.items = state.items.map((item) => {
+                    if (item.id === action.payload.id) {
+                        return action.payload;
+                    }
+                    return item;
+                });
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_UPDATE_FAILURE:
+                draft.items = state.items.map((item) => {
+                    if (item.id === action.payload.id) {
+                        item.isUpdating = false;
+                    }
+                    return item;
+                });
+                draft.errors = ErrorMessage(action.payload.reason);
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_REMOVE_REQUEST:
+                draft.items = state.items.map((item) => {
+                    if (item.id === action.payload.id) {
+                        item.isRemoving = true;
+                    }
+                    return item;
+                });
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_REMOVE_SUCCESS:
+                draft.items = state.items.filter((item) => item.id !== action.payload.id);
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_REMOVE_FAILURE:
+                draft.items = state.items.map((item) => {
+                    if (item.id === action.payload.id) {
+                        item.isRemoving = false;
+                    }
+                    return item;
+                });
+                draft.errors = ErrorMessage(action.payload.reason);
+                return;
+        }
+    });

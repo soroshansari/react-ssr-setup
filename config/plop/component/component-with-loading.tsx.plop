@@ -1,0 +1,14 @@
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import WithLoading from '../../helper/WithLoading/WithLoading';
+
+const {{pascalCase componentName}} : React.FC<any> = () => {
+    const { t } = useTranslation();
+
+    return (<React.Fragment>
+    <h2>{t('features')}</h2>
+
+</React.Fragment>);
+};
+
+export default WithLoading({{pascalCase componentName}});

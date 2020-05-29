@@ -1,0 +1,52 @@
+import { {{pascalCase storeName}} } from '../../models/{{dashCase storeName}}.model';
+import { Action } from '../root.types';
+
+export type {{pascalCase storeName}}State = {
+    didInvalidate: boolean;
+    isLoading: boolean;
+    items: {{pascalCase storeName}}[];
+    errors: string[];
+    updatedAt: number | null;
+};
+
+export const {{camelCase storeName}}InitialState: {{pascalCase storeName}}State = Object.freeze({
+    didInvalidate: false,
+    isLoading: false,
+    items: [],
+    errors: [],
+    updatedAt: null,
+});
+
+export enum {{pascalCase storeName}}ActionTypes {
+    {{upperCase (snakeCase storeName) }}_REQUEST = '{{pkg 'name'}}/{{dashCase storeName}}/request',
+    {{upperCase (snakeCase storeName) }}_SUCCESS = '{{pkg 'name'}}/{{dashCase storeName}}/success',
+    {{upperCase (snakeCase storeName) }}_FAILURE = '{{pkg 'name'}}/{{dashCase storeName}}/failure',
+    {{upperCase (snakeCase storeName) }}_INVALIDATE = '{{pkg 'name'}}/{{dashCase storeName}}/invalidate',
+}
+
+interface {{pascalCase storeName}}RequestAction extends Action {
+    type: typeof {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_REQUEST;
+}
+
+interface {{pascalCase storeName}}SuccessAction extends Action {
+    type: typeof {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_SUCCESS;
+    payload: {
+        items: {{pascalCase storeName}}[];
+        updatedAt: number;
+    };
+}
+
+interface {{pascalCase storeName}}FailureAction extends Action {
+    type: typeof {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_FAILURE;
+    payload: { reason: string };
+}
+
+interface {{pascalCase storeName}}InvalidateAction extends Action {
+    type: typeof {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_INVALIDATE;
+}
+
+export type {{pascalCase storeName}}Actions =
+    | {{pascalCase storeName}}RequestAction
+    | {{pascalCase storeName}}SuccessAction
+    | {{pascalCase storeName}}FailureAction
+    | {{pascalCase storeName}}InvalidateAction;

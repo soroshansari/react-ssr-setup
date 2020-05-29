@@ -1,0 +1,29 @@
+import { produce } from 'immer';
+import { ErrorMessage } from '../../providers/global.provider';
+import { {{pascalCase storeName}}Actions, {{pascalCase storeName}}ActionTypes, {{pascalCase storeName}}State, {{camelCase storeName}}InitialState } from './types';
+
+export default (state: {{pascalCase storeName}}State = {{camelCase storeName}}InitialState, action: {{pascalCase storeName}}Actions) =>
+    produce(state, (draft) => {
+        switch (action.type) {
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_REQUEST:
+                draft.isLoading = true;
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_SUCCESS:
+                draft.didInvalidate = false;
+                draft.updatedAt = action.payload.updatedAt;
+                draft.items = action.payload.items || [];
+                draft.isLoading = false;
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_FAILURE:
+                draft.didInvalidate = true;
+                draft.isLoading = false;
+                draft.errors = ErrorMessage(action.payload.reason);
+                return;
+
+            case {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_INVALIDATE:
+                draft.didInvalidate = true;
+                return;
+        }
+    });

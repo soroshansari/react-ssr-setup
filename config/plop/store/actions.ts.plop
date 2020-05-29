@@ -1,0 +1,23 @@
+import { {{pascalCase storeName}} } from '../../models/{{dashCase storeName}}.model';
+import { {{pascalCase storeName}}ActionTypes, {{pascalCase storeName}}Actions } from './types';
+
+export const {{pascalCase storeName}}Request = (): {{pascalCase storeName}}Actions => ({
+    type: {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_REQUEST,
+});
+
+export const {{pascalCase storeName}}Success = (items: {{pascalCase storeName}}[]): {{pascalCase storeName}}Actions => ({
+    type: {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_SUCCESS,
+    payload: {
+        items,
+        updatedAt: Number(Date.now()),
+    },
+});
+
+export const {{pascalCase storeName}}Failure = (error?: string): {{pascalCase storeName}}Actions => ({
+    type: {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_FAILURE,
+    payload: { reason: error || 'Something went wrong!' },
+});
+
+export const {{pascalCase storeName}}Invalidate = (): {{pascalCase storeName}}Actions => ({
+    type: {{pascalCase storeName}}ActionTypes.{{upperCase (snakeCase storeName)}}_INVALIDATE,
+});

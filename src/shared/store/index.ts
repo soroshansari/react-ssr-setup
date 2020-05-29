@@ -1,6 +1,8 @@
-import thunk from 'redux-thunk';
+import thunk, { ThunkMiddleware } from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import createRootReducer from './rootReducer';
+import logger from 'redux-logger';
+import RootReducer from './root.reducer';
+import { RootState, RootActions } from './root.types';
 
 type StoreParams = {
     initialState?: { [key: string]: any };
@@ -15,16 +17,24 @@ export const configureStore = ({ initialState, middleware = [] }: StoreParams) =
 
     const composeEnhancers = devtools || compose;
 
+    if (process.env.NODE_ENV !== 'production') {
+        middleware = [...middleware, logger];
+    }
+
     const store = createStore(
-        createRootReducer(),
+        RootReducer,
         initialState,
-        composeEnhancers(applyMiddleware(...[thunk].concat(...middleware)))
+        composeEnhancers(
+            applyMiddleware(
+                ...[thunk as ThunkMiddleware<RootState, RootActions>].concat(...middleware)
+            )
+        )
     );
 
     if (process.env.NODE_ENV !== 'production') {
         if (module.hot) {
-            module.hot.accept('./rootReducer', () =>
-                store.replaceReducer(require('./rootReducer').default)
+            module.hot.accept('./root.reducer', () =>
+                store.replaceReducer(require('./root.reducer').default)
             );
         }
     }
